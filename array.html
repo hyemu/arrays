@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+@font-face {
+  font-family: 'SF Pro Display';
+  src: url('fonts/SFPRODISPLAYREGULAR.OTF') format('opentype');
+}
+
+body {
+  font-family: 'SF Pro Display';
+  margin: 0;
+  background-image: url('bkg.jpg');
+  background-size: cover;
+}
+
+.container {
+  margin: 20px;
+}
+
+.window {
+  background-color: #fff;
+  width: 550px;
+  margin: 0 auto;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  resize: both; /* Enable resizing */
+  overflow: auto; /* Add scrollbar if content exceeds window size */
+}
+
+.title-bar {
+  display: flex;
+  font-family: 'SF Pro Display';
+  align-items: center;
+  height: 30px;
+  background-color: #f0f0f0;
+  border-radius: 8px 8px 0 0;
+  padding: 0 8px;
+  margin-bottom: 20px;
+}
+
+.title-bar .button {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  margin-right: 6px;
+}
+
+.title-bar .button.red { background-color: #ff5f57; }
+.title-bar .button.yellow { background-color: #ffbd2e; }
+.title-bar .button.green { background-color: #28c940; }
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+th, td {
+  padding: 18px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+thead {
+  background-color: #f2f2f2;
+}
+
+tbody tr:nth-child(even) {
+  background-color: #ffffff;
+}
+
+tbody tr:nth-child(odd) {
+  background-color: #ffffff;
+}
+
+tbody tr:hover {
+  background-color: #e6e6e6;
+}
+
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="window">
+    <div class="title-bar">
+      <div class="button red"></div>
+      <div class="button yellow"></div>
+      <div class="button green"></div>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>Firstname</th>
+          <th>Lastname</th>
+          <th>Program</th>
+          <th>Gender</th>
+          <th>Hobbies</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Table content dynamically generated using JavaScript -->
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+const students = [
+  {
+    firstname: "John",
+    lastname: "Smith",
+    program: "BSCS",
+    gender: "male",
+    hobbies: ["singing", "cooking", "dancing"],
+  },
+  {
+    firstname: "Emma",
+    lastname: "Johnson",
+    program: "BSA",
+    gender: "female",
+    hobbies: ["reading", "painting", "swimming"],
+  },
+  {
+    firstname: "Michael",
+    lastname: "Brown",
+    program: "BSN",
+    gender: "male",
+    hobbies: ["playing guitar", "photography", "gardening"],
+  },
+  {
+    firstname: "Olivia",
+    lastname: "Taylor",
+    program: "BSIT",
+    gender: "female",
+    hobbies: ["fishing", "reading", "swimming"],
+  },
+  {
+    firstname: "William",
+    lastname: "Miller",
+    program: "BSEE",
+    gender: "male",
+    hobbies: ["singing", "crocheting", "dancing"],
+  },
+  {
+    firstname: "Ava",
+    lastname: "Wilson",
+    program: "BSHM",
+    gender: "female",
+    hobbies: ["reading", "painting", "swimming"],
+  },
+  {
+    firstname: "James",
+    lastname: "Moore",
+    program: "BSED",
+    gender: "male",
+    hobbies: ["playing guitar", "photography", "yoga"],
+  },
+  {
+    firstname: "Sophia",
+    lastname: "Anderson",
+    program: "DMD",
+    gender: "female",
+    hobbies: ["hiking", "reading", "swimming"],
+  },
+  {
+    firstname: "Benjamin",
+    lastname: "Thomas",
+    program: "BSCE",
+    gender: "male",
+    hobbies: ["singing", "cooking", "dancing"],
+  },
+  {
+    firstname: "Isabella",
+    lastname: "Jackson",
+    program: "BSCoE",
+    gender: "female",
+    hobbies: ["reading", "games", "coding"],
+  },
+];
+
+
+
+const container = document.querySelector('.container');
+const tbody = container.querySelector('tbody');
+
+// Create table body
+for (const student of students) {
+  const { firstname, lastname, gender, hobbies, program } = student;
+  const row = document.createElement('tr');
+  row.innerHTML = `
+    <td>${firstname}</td>
+    <td>${lastname}</td>
+    <td>${program}</td>
+    <td>${gender}</td>
+    <td>${hobbies.join(', ')}</td>
+  `;
+  tbody.appendChild(row);
+}
+
+// Enable window resizing
+const windowElement = document.querySelector('.window');
+
+// Initial mouse position
+let initialX = 0;
+let initialY = 0;
+
+// Function to handle mouse down event for resizing
+const handleMouseDown = (event) => {
+  initialX = event.clientX;
+  initialY = event.clientY;
+  window.addEventListener('mousemove', handleMouseMove);
+  window.addEventListener('mouseup', handleMouseUp);
+};
+
+// Function to handle mouse move event during resizing
+const handleMouseMove = (event) => {
+  const deltaX = event.clientX - initialX;
+  const deltaY = event.clientY - initialY;
+  const newWidth = windowElement.offsetWidth + deltaX;
+  const newHeight = windowElement.offsetHeight + deltaY;
+  windowElement.style.width = `${newWidth}px`;
+  windowElement.style.height = `${newHeight}px`;
+};
+
+// Function to handle mouse up event for resizing
+const handleMouseUp = () => {
+  window.removeEventListener('mousemove', handleMouseMove);
+  window.removeEventListener('mouseup', handleMouseUp);
+};
+
+// Attach event listeners for resizing
+const resizeHandle = document.createElement('div');
+resizeHandle.className = 'resize-handle';
+resizeHandle.addEventListener('mousedown', handleMouseDown);
+windowElement.appendChild(resizeHandle);
+</script>
+</body>
+</html>
